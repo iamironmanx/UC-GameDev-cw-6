@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerControl : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class PlayerControl : MonoBehaviour
     const string WALK_ANIM = "walk";
     const string JUMP_ANIM = "jump";
     string currAnim;
+    public GameObject bullet;
+    public float bulletSpeed;
 
     // Start is called before the first frame update
     void Start()
@@ -26,7 +29,6 @@ public class PlayerControl : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
 
-
     }
 
     // Update is called once per frame
@@ -34,6 +36,7 @@ public class PlayerControl : MonoBehaviour
     {
         MovePlayer();
         PlayerJump();
+        ShootBullet();
     }
     void MovePlayer()
     {
@@ -77,5 +80,21 @@ public class PlayerControl : MonoBehaviour
         }
         anim.Play(nextAnim);
         currAnim = nextAnim;
+    }
+    void ShootBullet()
+    {
+        if(Input.GetMouseButtonDown(0))
+        {
+            GameObject bulletClone = Instantiate(bullet, transform.position, Quaternion.identity);
+            if(faceRight)
+            {
+                bulletClone.GetComponent<Rigidbody2D>().velocity = new Vector2(bulletSpeed, 0);
+            }
+            else
+            {
+                bulletClone.GetComponent<Rigidbody2D>().velocity = new Vector2(-bulletSpeed, 0);
+            }
+            Destroy(bulletClone, 3);
+        }
     }
 }
